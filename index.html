@@ -1,0 +1,673 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SENTINEL FLL - Sistema de Vigilancia Arqueológica</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            color: #333;
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+        .logo-pie-de-pagina{
+            position: fixed;
+            top: 20px;
+            left: 20px;
+        }
+        .footing2{
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            top: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            background: linear-gradient(135deg, #1a5f7a 0%, #2d8c9f 100%);
+            color: white;
+            padding: 40px 20px;
+            text-align: center;
+            border-radius: 0 0 20px 20px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            position: relative;
+            z-index: 10;
+        }
+        
+        h1 {
+            font-size: 2.8rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+            letter-spacing: -0.5px;
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 1s ease, transform 1s ease;
+        }
+        
+        .subtitle {
+            font-size: 1.4rem;
+            font-weight: 400;
+            opacity: 0.9;
+            max-width: 700px;
+            margin: 0 auto;
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 1s ease 0.2s, transform 1s ease 0.2s;
+        }
+        
+        .badge {
+            display: inline-block;
+            background: #ffc107;
+            color: #333;
+            padding: 10px 20px;
+            border-radius: 25px;
+            font-weight: 600;
+            margin-top: 20px;
+            font-size: 1rem;
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 1s ease 0.4s, transform 1s ease 0.4s;
+        }
+        
+        .card {
+            background: white;
+            margin: 30px 0;
+            padding: 35px;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+            transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+            opacity: 0;
+            transform: translateY(50px);
+        }
+        
+        .card.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        h2 {
+            color: #1a5f7a;
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 3px solid #ffc107;
+            opacity: 0;
+            transform: translateX(-30px);
+            transition: opacity 0.8s ease 0.3s, transform 0.8s ease 0.3s;
+        }
+        
+        .card.visible h2 {
+            opacity: 1;
+            transform: translateX(0);
+        }
+        
+        p {
+            font-size: 1.1rem;
+            margin-bottom: 20px;
+            color: #495057;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.8s ease, transform 0.8s ease;
+        }
+        
+        .card.visible p {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        .card.visible p:nth-child(2) { transition-delay: 0.1s; }
+        .card.visible p:nth-child(3) { transition-delay: 0.2s; }
+        .card.visible p:nth-child(4) { transition-delay: 0.3s; }
+        
+        .quote {
+            background: #e3f2fd;
+            border-left: 4px solid #1a5f7a;
+            padding: 20px;
+            margin: 25px 0;
+            border-radius: 0 10px 10px 0;
+            font-style: italic;
+            opacity: 0;
+            transform: scale(0.95);
+            transition: opacity 0.8s ease 0.4s, transform 0.8s ease 0.4s;
+        }
+        
+        .card.visible .quote {
+            opacity: 1;
+            transform: scale(1);
+        }
+        
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+            margin: 30px 0;
+        }
+        
+        .feature {
+            background: #f8f9fa;
+            padding: 25px;
+            border-radius: 10px;
+            text-align: center;
+            border: 2px solid #e9ecef;
+            transition: all 0.5s ease;
+            opacity: 0;
+            transform: translateY(30px);
+        }
+        
+        .card.visible .feature {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        .card.visible .feature:nth-child(1) { transition-delay: 0.2s; }
+        .card.visible .feature:nth-child(2) { transition-delay: 0.3s; }
+        .card.visible .feature:nth-child(3) { transition-delay: 0.4s; }
+        
+        .feature:hover {
+            border-color: #1a5f7a;
+            background: white;
+            transform: translateY(-5px);
+        }
+        
+        .feature-icon {
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+            color: #1a5f7a;
+        }
+        
+        .feature h3 {
+            color: #333;
+            font-size: 1.3rem;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+        
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 20px;
+            background: linear-gradient(135deg, #2d8c9f 0%, #1a5f7a 100%);
+            color: white;
+            padding: 40px;
+            border-radius: 15px;
+            margin: 40px 0;
+            opacity: 0;
+            transform: scale(0.9);
+            transition: opacity 0.8s ease, transform 0.8s ease;
+        }
+        
+        .card.visible .stats {
+            opacity: 1;
+            transform: scale(1);
+        }
+        
+        .stat {
+            text-align: center;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.6s ease, transform 0.6s ease;
+        }
+        
+        .card.visible .stat {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        .card.visible .stat:nth-child(1) { transition-delay: 0.1s; }
+        .card.visible .stat:nth-child(2) { transition-delay: 0.2s; }
+        .card.visible .stat:nth-child(3) { transition-delay: 0.3s; }
+        .card.visible .stat:nth-child(4) { transition-delay: 0.4s; }
+        
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #ffc107;
+            display: block;
+            margin-bottom: 5px;
+        }
+        
+        .stat-label {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+        
+        .tech-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        
+        .tag {
+            background: #e3f2fd;
+            color: #1a5f7a;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-weight: 500;
+            font-size: 0.9rem;
+            border: 1px solid #bbdefb;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.5s ease, transform 0.5s ease;
+        }
+        
+        .card.visible .tag {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        .card.visible .tag:nth-child(1) { transition-delay: 0.1s; }
+        .card.visible .tag:nth-child(2) { transition-delay: 0.2s; }
+        .card.visible .tag:nth-child(3) { transition-delay: 0.3s; }
+        .card.visible .tag:nth-child(4) { transition-delay: 0.4s; }
+        .card.visible .tag:nth-child(5) { transition-delay: 0.5s; }
+        
+        footer {
+            background: #1a5f7a;
+            color: white;
+            text-align: center;
+            padding: 40px 20px;
+            margin-top: 50px;
+            border-radius: 20px 20px 0 0;
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 1s ease, transform 1s ease;
+        }
+        
+        footer.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        .mission {
+            font-size: 1.2rem;
+            font-style: italic;
+            margin-top: 20px;
+            opacity: 0.9;
+        }
+        
+        /* Efecto de desvanecimiento al salir */
+        .card.fade-out {
+            opacity: 0.3 !important;
+            transform: translateY(20px) !important;
+        }
+        
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2.2rem;
+            }
+            
+            .subtitle {
+                font-size: 1.2rem;
+            }
+            
+            .card {
+                padding: 25px 20px;
+            }
+            
+            h2 {
+                font-size: 1.6rem;
+            }
+            
+            .stats {
+                grid-template-columns: 1fr 1fr;
+                padding: 30px 20px;
+            }
+            
+            .stat-number {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1 id="main-title">SENTINEL</h1>
+            <p class="subtitle" id="main-subtitle">Sistema de vigilancia inteligente para proteger sitios arqueológicos</p>
+            <div class="badge" id="main-badge">Gold Diggers</div>
+        </div>
+    </header>
+    
+    <div class="container">
+        <!-- Sección 1: Contexto y Problema -->
+        <div class="card" id="card1">
+            <h2>El Problema que Resolvemos</h2>
+            <p>Los sitios arqueológicos están en peligro constante. Vandalismo, saqueo y el deterioro ambiental amenazan nuestra historia compartida. Muchas comunidades no tienen los recursos para proteger estos tesoros culturales.</p>
+            
+            <div class="quote">
+                "Cada sitio arqueológico destruido es una página perdida de nuestro libro de historia"
+            </div>
+            
+            <h3>¿Qué estamos protegiendo?</h3>
+            <div class="grid">
+                <div class="feature">
+                    <div class="feature-icon">⚡</div>
+                    <h3>Vandalismo</h3>
+                    <p>Daño intencional a estructuras históricas y artefactos</p>
+                </div>
+                
+                <div class="feature">
+                    <div class="feature-icon">💰</div>
+                    <h3>Saqueo</h3>
+                    <p>Robo de piezas arqueológicas para el mercado negro</p>
+                </div>
+                
+                <div class="feature">
+                    <div class="feature-icon">🌡️</div>
+                    <h3>Deterioro Ambiental</h3>
+                    <p>Daños por humedad, temperatura y contaminación</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Sección 2: Nuestra Solución -->
+        <div class="card" id="card2">
+            <h2>Nuestra Solución</h2>
+            <p>Sentinel FLL es como un "guardián digital" para sitios arqueológicos. Usamos tecnología simple pero inteligente para detectar problemas antes de que causen daño permanente.</p>
+            
+            <div class="stats">
+                <div class="stat">
+                    <span class="stat-number">< Q.269</span>
+                    <span class="stat-label">Costo por unidad</span>
+                </div>
+                <div class="stat">
+                    <span class="stat-number">24/7</span>
+                    <span class="stat-label">Monitoreo</span>
+                </div>
+                <div class="stat">
+                    <span class="stat-number">50 m²</span>
+                    <span class="stat-label">Área protegida</span>
+                </div>
+                <div class="stat">
+                    <span class="stat-number">2 seg</span>
+                    <span class="stat-label">Respuesta</span>
+                </div>
+            </div>
+            
+            <h3>Tecnología que usamos</h3>
+            <div class="tech-tags">
+                <span class="tag">Arduino UNO R3</span>
+                <span class="tag">Sensor KY-037</span>
+                <span class="tag">Sensor MQ-2</span>
+                <span class="tag">Web Serial API</span>
+                <span class="tag">Interfaz Web</span>
+            </div>
+        </div>
+        
+        <!-- Sección 3: Cómo funciona -->
+        <div class="card" id="card3">
+            <h2>¿Cómo funciona?</h2>
+            <p>Sentinel combina hardware accesible con software moderno para crear un sistema completo de protección.</p>
+            
+            <div class="grid">
+                <div class="feature">
+                    <div class="feature-icon">👂</div>
+                    <h3>Escucha</h3>
+                    <p>Detecta sonidos sospechosos como pasos, voces o herramientas</p>
+                </div>
+                
+                <div class="feature">
+                    <div class="feature-icon">👃</div>
+                    <h3>Huele</h3>
+                    <p>Identifica humo, polvo o cambios en la calidad del aire</p>
+                </div>
+                
+                <div class="feature">
+                    <div class="feature-icon">📱</div>
+                    <h3>Alerta</h3>
+                    <p>Envía notificaciones inmediatas cuando detecta peligro</p>
+                </div>
+            </div>
+            
+            <div class="quote">
+                "No necesitas ser un experto en tecnología para proteger tu patrimonio cultural"
+            </div>
+        </div>
+        
+        <!-- Sección 4: Impacto -->
+        <div class="card" id="card4">
+            <h2>Impacto Real</h2>
+            <p>Sentinel no es solo tecnología, es una herramienta para empoderar comunidades. Hacemos posible que cualquier pueblo, escuela o museo pequeño pueda proteger su historia.</p>
+            
+            <div class="grid">
+                <div class="feature">
+                    <div class="feature-icon">🏛️</div>
+                    <h3>Para Sitios Remotos</h3>
+                    <p>Funciona con baterías en lugares sin electricidad</p>
+                </div>
+                
+                <div class="feature">
+                    <div class="feature-icon">🏫</div>
+                    <h3>Para Escuelas</h3>
+                    <p>Herramienta educativa de STEM aplicado a historia</p>
+                </div>
+                
+                <div class="feature">
+                    <div class="feature-icon">👥</div>
+                    <h3>Para Comunidades</h3>
+                    <p>Protección colaborativa del patrimonio local</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- NUEVA SECCIÓN: Estadísticas de Guatemala (Patrimonio en Riesgo) -->
+        <div class="card" id="card-gt">
+            <h2>🇬🇹 Guatemala: Patrimonio en Riesgo</h2>
+            <p>Guatemala alberga algunos de los sitios arqueológicos más importantes de Mesoamérica, pero enfrenta graves desafíos de protección. Según el Ministerio de Cultura y Deportes y el Registro de Bienes Culturales:</p>
+            
+            <div class="stats">
+                <div class="stat">
+                    <span class="stat-number">+5,000</span>
+                    <span class="stat-label">Sitios arqueológicos registrados</span>
+                </div>
+                <div class="stat">
+                    <span class="stat-number">65%</span>
+                    <span class="stat-label">Sin protección permanente</span>
+                </div>
+                <div class="stat">
+                    <span class="stat-number">+300</span>
+                    <span class="stat-label">Casos de saqueo/año</span>
+                </div>
+                <div class="stat">
+                    <span class="stat-number">40%</span>
+                    <span class="stat-label">De sitios afectados por vandalismo</span>
+                </div>
+            </div>
+            
+            <p>La falta de recursos y personal hace que miles de estructuras prehispánicas estén expuestas al saqueo y la destrucción. Sentinel ofrece una solución accesible para que comunidades y guardarrecursos puedan monitorear estos sitios de manera continua y autónoma.</p>
+            
+            <div class="quote">
+                "Tecnología simple para proteger la grandeza de nuestra historia maya"
+            </div>
+        </div>
+        
+        <!-- Sección 5: Visión -->
+        <div class="card" id="card5">
+            <h2>Nuestra Visión</h2>
+            <p>Creemos que proteger nuestro pasado no debería ser un lujo. Con Sentinel, cualquier comunidad puede convertirse en guardiana de su propia historia.</p>
+            
+            <div class="quote">
+                "La mejor tecnología es la que todos pueden usar, no solo los expertos"
+            </div>
+            
+            <h3>Valores del proyecto</h3>
+            <div class="tech-tags">
+                <span class="tag">Accesible</span>
+                <span class="tag">Sencillo</span>
+                <span class="tag">Efectivo</span>
+                <span class="tag">Educativo</span>
+                <span class="tag">Comunitario</span>
+                <span class="tag">Sostenible</span>
+            </div>
+        </div>
+    </div>
+    
+    <footer id="footer">
+        <div class="container">
+            <h2>SENTINEL FLL</h2>
+            <img src="" alt="Gold Diggers Logo" class="footing2" width="250" height="200">
+            <img src="https://lirp.cdn-website.com/33caef20/dms3rep/multi/opt/Liceo+Bressani+-+Logo+2020-1920w.PNG" alt="imagen" class="logo-pie-de-pagina" width="225" height="200" >
+            <p class="mission" style="color:white">"Protegiendo nuestro pasado, construyendo nuestro futuro"</p>
+            <p  style="margin-top: 30px; font-size: 0.9rem; opacity: 0.8; color: white;">©2026 Gold Diggers</p>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Guardar valores originales de los contadores
+            document.querySelectorAll('.stat-number').forEach(stat => {
+                stat.dataset.original = stat.textContent;
+            });
+
+            const animMap = new Map();
+
+            // Animación suave basada en tiempo real (duración fija 1 segundo)
+            function animateCounter(statElement, targetNumber, duration = 1000) {
+                if (animMap.has(statElement)) {
+                    cancelAnimationFrame(animMap.get(statElement));
+                    animMap.delete(statElement);
+                }
+
+                const originalText = statElement.dataset.original;
+                const startTime = performance.now();
+
+                function update(currentTime) {
+                    const elapsed = currentTime - startTime;
+                    const progress = Math.min(elapsed / duration, 1);
+                    const currentValue = Math.floor(progress * targetNumber);
+
+                    statElement.textContent = originalText.replace(/\d+(\.\d+)?/g, currentValue);
+
+                    if (progress < 1) {
+                        animMap.set(statElement, requestAnimationFrame(update));
+                    } else {
+                        statElement.textContent = originalText.replace(/\d+(\.\d+)?/g, targetNumber);
+                        animMap.delete(statElement);
+                    }
+                }
+
+                animMap.set(statElement, requestAnimationFrame(update));
+            }
+
+            function resetStatsInCard(card) {
+                const stats = card.querySelectorAll('.stat-number');
+                stats.forEach(stat => {
+                    if (animMap.has(stat)) {
+                        cancelAnimationFrame(animMap.get(stat));
+                        animMap.delete(stat);
+                    }
+                    stat.textContent = stat.dataset.original;
+                });
+            }
+
+            function startStatsInCard(card) {
+                const stats = card.querySelectorAll('.stat-number');
+                stats.forEach(stat => {
+                    const match = stat.dataset.original.match(/\d+(\.\d+)?/);
+                    if (match) {
+                        const targetNumber = parseFloat(match[0]);
+                        animateCounter(stat, targetNumber, 1000);
+                    }
+                });
+            }
+
+            // Header animation
+            setTimeout(() => {
+                document.getElementById('main-title').style.opacity = '1';
+                document.getElementById('main-title').style.transform = 'translateY(0)';
+                document.getElementById('main-subtitle').style.opacity = '1';
+                document.getElementById('main-subtitle').style.transform = 'translateY(0)';
+                document.getElementById('main-badge').style.opacity = '1';
+                document.getElementById('main-badge').style.transform = 'translateY(0)';
+            }, 100);
+
+            const cards = document.querySelectorAll('.card');
+            const footer = document.getElementById('footer');
+
+            // Observer para fade in/out con retraso para evitar bugs en scroll rápido
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                        entry.target.classList.remove('fade-out');
+                        startStatsInCard(entry.target);
+                    } else {
+                        if (entry.target.classList.contains('visible')) {
+                            entry.target.classList.add('fade-out');
+                            setTimeout(() => {
+                                if (!entry.isIntersecting) {
+                                    resetStatsInCard(entry.target);
+                                    entry.target.classList.remove('visible');
+                                }
+                            }, 300);
+                        }
+                    }
+                });
+            }, { threshold: 0.2, rootMargin: '-50px 0px -100px 0px' });
+
+            cards.forEach(card => observer.observe(card));
+
+            // Footer observer
+            const footerObserver = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                    }
+                });
+            }, { threshold: 0.3 });
+            footerObserver.observe(footer);
+
+            // Hover features
+            document.querySelectorAll('.feature').forEach(feature => {
+                feature.addEventListener('mouseenter', () => {
+                    if (feature.closest('.card')?.classList.contains('visible')) {
+                        feature.style.transform = 'translateY(-5px)';
+                    }
+                });
+                feature.addEventListener('mouseleave', () => {
+                    if (feature.closest('.card')?.classList.contains('visible')) {
+                        feature.style.transform = 'translateY(0)';
+                    }
+                });
+            });
+
+            // Parallax y opacidad
+            window.addEventListener('scroll', function() {
+                const scrolled = window.pageYOffset;
+                const header = document.querySelector('header');
+                if (scrolled < 300) {
+                    header.style.transform = `translateY(${scrolled * 0.2}px)`;
+                }
+
+                document.querySelectorAll('.card').forEach(card => {
+                    const rect = card.getBoundingClientRect();
+                    const windowHeight = window.innerHeight;
+                    if (rect.top < windowHeight * 0.8 && rect.bottom > windowHeight * 0.2) {
+                        const cardCenter = rect.top + rect.height / 2;
+                        const windowCenter = windowHeight / 2;
+                        const distance = Math.abs(cardCenter - windowCenter);
+                        const maxDistance = windowHeight * 0.6;
+                        const opacity = 1 - (distance / maxDistance) * 0.3;
+                        card.style.opacity = Math.max(0.7, opacity);
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
